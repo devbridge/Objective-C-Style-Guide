@@ -38,7 +38,8 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	{
 		if (something) {
 			return;
-		} else {
+		} 
+		else {
 			return;
 		}
 	}
@@ -102,10 +103,12 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	  if (stuff == thing) {
 	      if (test) {
 	          a = foo;
-	      } else {
+	      } 
+	      else {
 	          a = barbar;
 	      }
-	  } else {
+	  } 
+	  else {
 	      a = bar;
 	  }
 
@@ -114,6 +117,13 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	  Blah *b = thingThatCouldBeNil ?: defaultValue;
 	  
 * Separate binary operands with a single space, but unary operands and casts with none:
+
+	  void *ptr = &value + 10 * 3;
+	  NewType a = (NewType)b;
+
+	  for (int i = 0; i < 10; i++) {
+    	  doCoolThings();
+	  }
 
 
 ## Control Structures
@@ -128,7 +138,8 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	
 	if (something == nil) {
 		// do stuff
-	} else {
+	} 
+	else {
 		// do other stuff
 	}
 
@@ -150,7 +161,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
     	// do some things
 	};
 
-	id (^blockName2)(id) = ^ id (id args) {
+	id (^blockName2)(id) = ^(id args) {
     	// do some things
 	};
 
@@ -158,13 +169,14 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 ##Literals
 ***
 * Avoid making numbers a specific type unless necessary (for example, prefer `5` to `5.0`, and `5.3` to `5.3f`).
-* The contents of array and dictionary literals should have spaces on sides.
-* Dictionary literals should have no space between the key, colon and the value.
+* Elements of array and dictionary literals should have a space after their separating comma.
+* The contents of array and dictionary literals should have no spaces on sides.
+* Dictionary literals should have a space between the colon and the value.
 * Long and complex literals are to be split over multiple lines, with lines having a terminating comma where appropriate.
 
 ###For example:
-	NSArray *stuff = @[@1,@2,@3];
-	NSDictionary *keyedStuff = @{GHDidCreateStyleGuide:@YES};
+	NSArray *stuff = @[@1, @2, @3];
+	NSDictionary *keyedStuff = @{GHDidCreateStyleGuide: @YES};
 	
 	NSArray *stuff = @[
     	@"Got some long string objects in here.",
@@ -173,11 +185,11 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	];
 	
 	NSDictionary *keyedStuff = @{
-    	@"this.key":@"corresponds to this value",
-    	@"otherKey":@"remoteData.payload",
-    	@"some":@"more",
-    	@"JSON":@"keys",
-    	@"and":@"stuff"
+    	@"this.key": @"corresponds to this value",
+    	@"otherKey": @"remoteData.payload",
+    	@"some": @"more",
+    	@"JSON": @"keys",
+    	@"and": @"stuff"
 	};
 
 	
