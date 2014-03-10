@@ -26,6 +26,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Literals](#literals)
 * [Categories](#categories)
 * [Objective-clean](#objective-clean)
+* [Class Headers](#class-headers)
 
 ## Whitespace
 ***
@@ -45,20 +46,15 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 		}
 	}
 
+###New lines
 
-```
-TZ: I don't fully agree that "if\else\switch\while statement braces open on the same line." should be mandotary. In my opinion sometime this requirement makes code ugly because there is too much code in little space :p i would like this to be recommended but not mandotary :)
-```
-
-##New lines
-
-Instances when new line is required:
+Instances when adding a new line is required:
 
 * before and after these statments: @implementation, @interface, @class, @protocol, #pragma mark  
 * before and after the method or function implementation
 * before @end	
 
-TZ: TODO: add more instances and examples
+<!-- TZ: TODO: add more instances and examples -->
 
 ## Proprocessor Directives
 ***
@@ -253,7 +249,8 @@ TZ: TODO: add more instances and examples
 
 
 
-##Class headers
+##Class Headers
+***
 
 Inspiration for this came from using some mature 3rd party library [PSPDFKit](http://pspdfkit.com) and reading [Structuring Modern Objective-C](http://ashfurrow.com/blog/structuring-modern-objective-c) article.
 
@@ -270,5 +267,8 @@ Inspiration for this came from using some mature 3rd party library [PSPDFKit](ht
 
 
 ##Objective Clean
+***
 
-To make sure that everyone is following this style guide, it's recommended to use [Objective-Clean](use http://objclean.com/index.php) software which will check for syntax errors (TODO: will generate such style file after we agree on all points) 
+To make sure that everyone is following this style guide, it's recommended to use [Objective-Clean](use http://objclean.com/index.php) software which will check for syntax errors 
+
+<!-- (TODO: will generate such style file after we agree on all points) -->
