@@ -25,11 +25,12 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Blocks](#blocks)
 * [Literals](#literals)
 * [Categories](#categories)
+* [Objective-clean](#objective-clean)
 
 ## Whitespace
 ***
 * Indentation with **4 spaces**, **no Tabs**.
-* Liberal use of whitespace withtin methods to divide code into logical chunks.
+* Liberal use of whitespace within methods to divide code into logical chunks.
 * Method braces open on the **next line** from method declaration. `if`\\`else`\\`switch`\\`while` statement braces open on the **same line**.
 * There is no requirement to limit code line screen length. Xcode word wrapping does a pretty good job. However this shouldn't be abused and code must be divided into sepparate lines given that it would improve readability. *Most cases will be outlined in other sections of this document*.
 
@@ -43,6 +44,20 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 		}
 	}
 
+
+```
+TZ: I don't fully agree that "if\else\switch\while statement braces open on the same line." should be mandotary. In my opinion sometime this requirement makes code ugly because there is too much code in little space :p i would like this to be recommended but not mandotary :)
+```
+
+##New lines
+
+Instances when new line is required:
+
+* before and after these statments: @implementation, @interface, @class, @protocol, #pragma mark  
+* before and after the method or function implementation
+* before @end	
+
+TZ: TODO: add more instances and examples
 
 ## Proprocessor Directives
 ***
@@ -203,6 +218,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	
 ####Class.m
 	#import "Class.h"
+	
 	@implementation Class
 	
 	- (id)init
@@ -222,3 +238,25 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 	}
 	
 	@end
+
+
+
+##Class headers
+
+Inspiration for this came from using some mature 3rd party library [PSPDFKit](http://pspdfkit.com) and reading [Structuring Modern Objective-C](http://ashfurrow.com/blog/structuring-modern-objective-c) article.
+
+* Don't #import in Header Files Unnecessarily. [Benefits](http://qualitycoding.org/file-dependencies/)
+
+####Class.h
+	class MyOtherClass;
+
+	@interface MyClass : NSObject
+
+	@property (nonatomic, strong) MyOtherClass property;
+
+	@end
+
+
+##Objective Clean
+
+To make sure that everyone is following this style guide, it's recommended to use [Objective-Clean](use http://objclean.com/index.php) software which will check for syntax errors (TODO: will generate such style file after we agree on all points) 
