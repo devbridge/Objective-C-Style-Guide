@@ -267,7 +267,7 @@ NSDictionary *keyedStuff = @{
 
 ##Class Headers
 
-Inspiration for this came from using some mature 3rd party library [PSPDFKit](http://pspdfkit.com) and reading [Structuring Modern Objective-C](http://ashfurrow.com/blog/structuring-modern-objective-c) article.
+Inspiration for this came from using the mature 3rd party library [PSPDFKit](http://pspdfkit.com) and reading the [Structuring Modern Objective-C](http://ashfurrow.com/blog/structuring-modern-objective-c) article.
 
 * Don't #import in Header Files Unnecessarily. Here are the [Benefits](http://qualitycoding.org/file-dependencies/)
 
@@ -284,7 +284,7 @@ class MyOtherClass;
 
 ##Reactive Cocoa
 
-For [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) and other frameworks the rely heavily of block chaining we enforce the indenting of every chained RACSignal/RACStream operation:
+For [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) and other frameworks the rely heavily on block chaining, we enforce the indenting of every chained RACSignal/RACStream operation:
 
 ```objc
 RACStream *result = [stream startWith:@0];
