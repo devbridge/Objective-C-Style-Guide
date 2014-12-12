@@ -1,4 +1,4 @@
-![Devbridge Group](http://brillstreet.com/sites/default/files/Devbridge_Group_Logos_V5_resized.png)
+![Devbridge Group](https://raw.githubusercontent.com/devbridge/Objective-C-Style-Guide/master/devb-logo.png)
 # Objective-C Style Guide
 
 This style guide outlines the coding conventions of the iOS team at [Devbridge Group](http://www.devbridge.com). This style guide is always updated and accepts change requests. Shoot us a mail at **mobile@devbridge.com**.
@@ -319,4 +319,4 @@ Generally we try to follow the official [ReactiveCocoa guidelines](https://githu
 
 ##Objective Clean
 
-To enforce some of these rules automatically we use the [Objective-Clean](http://objclean.com/) app. Here's our default [StyleSettings](http://objclean.com/index.php).
+To enforce some of these rules automatically we use the [Objective-Clean](http://objclean.com/) app. Here's our default [StyleSettings](https://raw.githubusercontent.com/devbridge/Objective-C-Style-Guide/master/StyleSettings.plist).
