@@ -25,7 +25,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Literals](#literals)
 * [Categories](#categories)
 * [Class Headers](#class-headers)
-* [Reactive Cocoa](#reactive-cocoa)
+* [ReactiveCocoa](#reactivecocoa)
 * [Objective-clean](#objective-clean)
 
 ## Whitespace
@@ -282,9 +282,9 @@ class MyOtherClass;
 @end
 ```
 
-##Reactive Cocoa
+##ReactiveCocoa
 
-For [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) and other frameworks the rely heavily on block chaining, we enforce the indenting of every chained RACSignal/RACStream operation:
+For [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) and other frameworks that rely heavily on block chaining, we enforce the indenting of every chained RACSignal/RACStream operation:
 
 ```objc
 RACStream *result = [stream startWith:@0];
