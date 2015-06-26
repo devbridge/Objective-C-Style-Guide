@@ -181,7 +181,8 @@ NSDictionary *keyedStuff = @{
 
 * Use `#pragma mark - <section_name>` to sepparate class code into sections of similar function. In particular, when implementing delegate's methods, name the section after delegates name. For instance, methods of `UITextFieldDelegate` should be located under `#pragma mark - UITextFieldDelegate` section.
 * Use `#ifdef`, `#ifndef` and `#define` to change constants and flow based on what configuration the project is built on, by passing preprocessor macros.
-* Note, try avoiding uses of `#define` for constants. Consider using static and extern variables instead. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
+* Avoiding uses of `#define` for constants. Consider using static and extern variables instead. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
+* Avoid writing helper functions using `#define`. Implement C inline functions instead.
 * Avoid using `#warning` or `#error` directives, unless it is really neeeded. Having artificial warnings obscure the view of real problems. If you want to annotate your code, consider using [comments](#comments) instead.
 
 ### For example:
