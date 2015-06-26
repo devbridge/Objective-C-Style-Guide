@@ -21,7 +21,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Blocks](#blocks)
 * [Literals](#literals)
 * [Exceptions and Error Handling](#exceptions-and-error-handling)
-* [Proprocessor Directives](#proprocessor-directives)
+* [Preprocessor Directives](#proprocessor-directives)
 * [Comments](#comments)
 * [Imports](#imports)
 * [Declarations](#declarations)
@@ -177,11 +177,12 @@ NSDictionary *keyedStuff = @{
 * To indicate errors, use an `NSError **` argument.
 
    
-## Proprocessor Directives
+## Preprocessor Directives
 
 * Use `#pragma mark - <section_name>` to sepparate class code into sections of similar function. In particular, when implementing delegate's methods, name the section after delegates name. For instance, methods of `UITextFieldDelegate` should be located under `#pragma mark - UITextFieldDelegate` section.
 * Use `#ifdef`, `#ifndef` and `#define` to change constants and flow based on what configuration the project is built on, by passing preprocessor macros.
 * Note, try avoiding uses of `#define` for constants. Consider using static and extern variables instead. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
+* Avoid using `#warning` or `#error` directives, unless it is really neeeded. Having artificial warnings obscure the view of real problems. If you want to annotate your code, consider using [comments](#comments) instead.
 
 ### For example:
 
@@ -429,6 +430,7 @@ if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
 
 * Name test class names after the class that is being tested. For example, `MyClass_tests.m`.
 * For each tests case, put underscore in the method's name after word test and elsewhere if it makes it easier to read. For instance: `- (void)test_operationSuceeds` or `- (void)test_operationSucceeds_withDelay`.
+* Avoid constructing bulky test methods. Instead separate the large code block into smaller methods and name them appropriately. If they have common setup routine, consider writing a helper method or using `- setUp`.
 
 ##ReactiveCocoa
 
