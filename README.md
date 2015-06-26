@@ -105,6 +105,8 @@ for (int i = 0; i < 10; i++) {
 }
 ```
 
+* Avoid using `==` equality operator on objects. Instead, use `- isEqual:` method.
+
 ## Control Structures
 * Always surround if bodies with curly braces if there is an else. Single-line if bodies without an else should be on the same line as the if.
 * All curly braces should begin on the same line as their associated statement. They should end on a new line.
@@ -152,12 +154,12 @@ id (^blockName2)(id) = ^(id args) {
 ###For example:
 ```objc
 NSArray *stuff = @[@1, @2, @3];
-NSDictionary *keyedStuff = @{GHDidCreateStyleGuide: @YES};
+NSDictionary *keyedStuff = @{@"myKey": @YES};
     
 NSArray *stuff = @[
     @"Got some long string objects in here.",
     [AndSomeModelObjects too],
-    @"Moar strings."
+    @"More strings."
 ];
     
 NSDictionary *keyedStuff = @{
@@ -167,6 +169,49 @@ NSDictionary *keyedStuff = @{
     @"JSON": @"keys",
     @"and": @"stuff"
 };
+```
+
+##Enumerations
+
+* Use only `NS_ENUM` for enumerations and `NS_OPTIONS` for bitmasks.
+* Prefix enumeration name with 2 or 3 character abbreviation of the project.
+* Avoid defining explicit values inside enum, unless really needed.
+* Prefix enum values with `k`. Try to keep value names consice but not too short to avoid possible overlay with other libraries;
+* Place unknown or undefined value as a first in the list, so that it is default. If application is trusted to never have undefined value, you can ommit having unkown value.
+* If convertion between enum and object is needed, write a C function next to the enum definition.
+
+###For example:
+####Enums.h:
+```objc
+
+NS_ENUM (NSUInteger, DBPaymentMethod) {
+	kPaymentUnknown,
+	kPaymentVisa,
+	kPaymentMasterCard
+};
+DBPaymentMethod paymentMethodFromString(NSString *str);
+NSString *stringFromPaymentMethod(DBPaymentMethod method);
+```
+
+####Enums.m
+```objc
+
+DBPaymentMethod paymentMethodFromString(NSString *str)
+{
+	if ([str isEqualToString:@"Visa"]) return kPaymentVisa;
+	if ([str isEqualToString:@"MasterCard"]) return kPaymentMasterCard;
+	return kPaymentUnknown;
+}
+
+NSString *stringFromPaymentMethod(DBPaymentMethod method)
+{
+	switch (method) {
+		case kPaymentVisa: return @"Visa";
+		case kPaymentMasterCard: return @"MasterCard";
+		default: return nil;
+	}
+	return nil;
+}
 ```
 
 ##Exceptions and Error Handling
@@ -181,7 +226,7 @@ NSDictionary *keyedStuff = @{
 
 * Use `#pragma mark - <section_name>` to sepparate class code into sections of similar function. In particular, when implementing delegate's methods, name the section after delegates name. For instance, methods of `UITextFieldDelegate` should be located under `#pragma mark - UITextFieldDelegate` section.
 * Use `#ifdef`, `#ifndef` and `#define` to change constants and flow based on what configuration the project is built on, by passing preprocessor macros.
-* Avoiding uses of `#define` for constants. Consider using static and extern variables instead. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
+* Avoiding uses of `#define` for constants. Use `static const` or `extern const` variables instead, e.g. `static const NSInteger kMultiplier = 5;`. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
 * Avoid writing helper functions using `#define`. Implement C inline functions instead.
 * Avoid using `#warning` or `#error` directives, unless it is really neeeded. Having artificial warnings obscure the view of real problems. If you want to annotate your code, consider using [comments](#comments) instead.
 
@@ -253,30 +298,31 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 
 ### For example:
 
-####MyClass.h:
+####DBClass.h:
 ```objc
-#import "MyOtherClass.h"
+#import "DBOtherClass.h"
 
-@class MyYetAnotherClass;
-@interface MyClass <MyOtherClassDelegate>
+@class DBYetAnotherClass;
+@interface DBClass <DBOtherClassDelegate>
 
-@property (nonatomic, strong) MyYetAnotherClass *myProperty;
+@property (nonatomic, strong) DBYetAnotherClass *myProperty;
 
 @end
 ```
 
-####MyClass.m:
+####DBClass.m:
 ```objc
-#import "MyClass.h"
-#import "MyYetAnotherClass.h"
+#import "DBClass.h"
+#import "DBYetAnotherClass.h"
 
-@implementation MyClass
+@implementation DBClass
 
 @end
 ```
     
 ## Declarations
 
+* Class names must be prefixed with 2 or 3 character abbreviation of the project.
 * Don’t use line breaks in method declarations.
 * Method declarations should begin with (`-`/`+`) symbol followed by a space and the return type. Properties should only have a space separating them from each other and a the `*` symbol from the property type (where applicable):
 ```objc
@@ -311,26 +357,26 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 * If you want to expose IBOutlet property to outside world, consider creating a shadow readonly property in the header file, while still keeping IBOutlet inside the implementation file.
 
 ###For example:
-####Class.h
+####DBClass.h
 ```objc
-@interface Class
+@interface DBClass
     
 @property (nonatomic, readonly) UILabel *myLabel;
     
 @end
 ```
 
-####Class.m
+####DBClass.m
 ```objc
-#import "Class.h"
+#import "DBClass.h"
     
-@interface Class ()
+@interface DBClass ()
 
 @property (nonatomic, strong) IBOutlet UILabel *myLabel;
 
 @end
     
-@implementation Class
+@implementation DBClass
 
 @end
 ```
@@ -341,37 +387,37 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 * Category name and class extension's brackets should be separated from the class name with a whitespace.
 * Category filenames should be constructed as ClassName+CategoryName (with plus being an actual part of the filename).
 * Expossing private methods for subclasses or unit testing should be done by creating a class extension named `Class_Private.h`.
-* Massive view controllers or huge manager singletons can have their code dispersed and categorized over several files with categories. In these cases we leave the category method declaration calls in the main class header, but we create different files for category method impementations.
-* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project followed by underscore to avoid runtime collisions with hidden methods. For instance:
+* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project followed by underscore to avoid runtime collisions with hidden methods. Also, category names with 2 or 3 character abbreviation of your project. For instance:
 ```objc
-@interface UIImage (MyCategory)
+@interface UIImage (DBResize)
 
 - (UIImage *)db_resizeImage;
 
 @end
 ```
+* Massive view controllers or huge manager singletons can have their code dispersed and categorized over several files with categories. In these cases we leave the category method declaration calls in the main class header, but we create different files for category method impementations.
 
 ###For example:
-####Class.h
+####DBClass.h
 ```objc
-@interface Class
+@interface DBClass
     
 - (id)init;
     
 @end
     
-@interface Class (Foo)
+@interface DBClass (Foo)
     
 - (void)bar;
     
 @end
 ```
 
-####Class.m
+####DBClass.m
 ```objc
-#import "Class.h"
+#import "DBClass.h"
     
-@implementation Class
+@implementation DBClass
     
 - (id)init
 {
@@ -381,10 +427,10 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 @end
 ```
     
-####Class+Foo.m
+####DBClass+Foo.m
 ```objc
-#import "Class.h"
-@implementation Class (Foo)
+#import "DBClass.h"
+@implementation DBClass (Foo)
 
 - (void)bar
 {
@@ -406,22 +452,22 @@ if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
 * Unless explicitly needed for subclassing, declare protocol support in class extension inside implementation file instead of the header file.
 
 ###For example:
-####Class.h:
+####DBClass.h:
 ```objc
-@interface Class
+@interface DBClass
 
 @end
 ```
 
-####Class.m:
+####DBClass.m:
 ```objc
-#import "Class.h"
+#import "DBClass.h"
 
-@interface Class () <UITextFieldDelegate>
+@interface DBClass () <UITextFieldDelegate>
 
 @end
 
-@implementation Class
+@implementation DBClass
 
 @end
 ```
@@ -429,7 +475,7 @@ if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
 
 ##Tests
 
-* Name test class names after the class that is being tested. For example, `MyClass_tests.m`.
+* Name test class names after the class that is being tested. For example, `DBClass_tests.m`.
 * For each tests case, put underscore in the method's name after word test and elsewhere if it makes it easier to read. For instance: `- (void)test_operationSucceeds` or `- (void)test_operationSucceeds_withDelay`.
 * Avoid constructing bulky test methods. Instead separate the large code block into smaller methods and name them appropriately. If they have common setup routine, consider writing a helper method or using `- setUp`.
 
