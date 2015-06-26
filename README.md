@@ -15,16 +15,19 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 ## Table of Contents
 
 * [Whitespace](#whitespace)
-* [Proprocessor Directives](#proprocessor-directives)
-* [Declarations](#declarations)
 * [Expressions](#expressions)
 * [Control Structures](#control-structures)
-* [Exceptions and Error Handling](#exceptions-and-error-handling)
 * [Expressions](#expressions)
 * [Blocks](#blocks)
 * [Literals](#literals)
+* [Exceptions and Error Handling](#exceptions-and-error-handling)
+* [Proprocessor Directives](#proprocessor-directives)
+* [Comments](#comments)
+* [Imports](#imports)
+* [Declarations](#declarations)
+* [IBOutlets](#iboutlets)
 * [Categories](#categories)
-* [Class Headers](#class-headers)
+* [Tests](#tests)
 * [ReactiveCocoa](#reactivecocoa)
 * [Objective-clean](#objective-clean)
 
@@ -32,8 +35,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 
 * Indentation with **4 spaces**, **no Tabs**.
 * Liberal use of whitespace within methods to divide code into logical chunks.
-* Method braces open on the **next line** from method declaration. `if`\\`else`\\`switch`\\`while` statement braces open on the **same line**.
-* There is no requirement to limit code line screen length. Xcode word wrapping does a pretty good job. However this shouldn't be abused and code must be divided into sepparate lines given that it would improve readability. *Most cases will be outlined in other sections of this document*.
+* There is no requirement to limit code line screen length. Xcode word wrapping does a pretty good job. However, this shouldn't be abused and code must be divided into sepparate lines given that it would improve readability. *Most cases will be outlined in other sections of this document*.
 
 ### For example:
 
@@ -53,61 +55,17 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 
 Instances when adding a new line is required:
 
-* before and after these statments: @implementation, @interface, @class, @protocol, #pragma mark  
+* before and after these statments: `@implementation`, `@interface`, `@class`, `@protocol`, `#pragma mark`
 * before and after the method or function implementation
-* before @end    
+* before `@end`
+* Method braces open on the **next line** from method declaration. `if`\\`else`\\`switch`\\`while` statement braces open on the **same line**.
 
 <!-- TZ: TODO: add more instances and examples -->
 
-## Proprocessor Directives
-
-* Use #pragma mark - <section_name> to sepparate class code into sections of similar function.
-* Use #warning to indicate incomplete or malfunctioning code.
-* TODO's should be written as comments. Adding [this script](https://coderwall.com/p/bfd0dq) to the project build phases will display all TODO's as warnings
-* Use #ifdef, #ifndef and #define to change constants and flow based on what configuration the project is built on, by passing preprocessor macros.
-
-### For example:
-
-```objc
-#pragma mark - Dummy Initiation
-- (id)init
-{
-    #warning this doesn't work
-    return nil;
-}
-    
-- (id)initWithFoo:(id)bar
-{
-#ifdef DEBUG
-    return 1;
-#endif
-    return nil;
-    //TODO: Add more spice.
-}
-```
-    
-## Declarations
-
-* Don’t use line breaks in method declarations.
-* Method declarations should begin with (`-`/`+`) symbol followed by a space and the return type. Properties should only have a space separating them from each other and a the `*` symbol from the property type (where applicable):
-```objc
-- (void)foo:(id)bar something:(NSObject *)something;
-```
-* Always declare memory-management semantics even on `readonly` properties.
-* Declare properties `readonly` if they are only set once in `-init`.
-* Don't use `@synthesize` unless the compiler requires it. Note that optional properties in protocols must be explicitly synthesized in order to exist.
-* Ivar's should be prefixed with an underscore (just like when implicitly synthesized).
-* Don't put a space between an object type and the protocol it conforms to.
-```objc
-@property (attributes) id<Protocol> object;
-@property (nonatomic, strong) NSObject<Protocol> *object;
-```
-* Constructors should generally return instancetype rather than id.
-
 ## Expressions
 
-* Don't access an ivar unless you're in -init, -dealloc or a custom accessor.
-* Use the dot notation when invoking idempotent methods (their return values don't change much). This includes property getters, setters and class methods like `NSFileManager.defaultManager`.
+* Don't access an instance variable unless you're in `-init`, `-dealloc` or a custom accessor.
+* Use the dot notation when invoking idempotent methods (their return values don't change much). This includes property getters and setters as well as methods that act like getters.
 * `BOOL` comparisons should never be explicit. `if (isSomething == YES) {}` is not guaranteed to work because a true `BOOL` can be any bit value but not a 0. Use `if (isSomething) {}` instead.
 * Prefer positive comparisons to negative.
 * Avoid long ternary operators, when nesting more than one is require use nested `if` statements instead.
@@ -164,12 +122,6 @@ else {
 }
 ```
 
-##Exceptions and Error Handling
-
-* Don't use exceptions for flow control.
-* Use exceptions only to indicate programmer error.
-* To indicate errors, use an NSError ** argument.
-
 ##Blocks
 
 * Blocks should have a space between their return type and name.
@@ -215,12 +167,185 @@ NSDictionary *keyedStuff = @{
     @"and": @"stuff"
 };
 ```
+
+##Exceptions and Error Handling
+
+* Don't use exceptions for flow control.
+* Use exceptions only to indicate programmer error.
+* Use `NSParameterAssert` in methods that have required parameters. Do not put expressions that change values inside these macros.
+* To indicate errors, use an `NSError **` argument.
+
+   
+## Proprocessor Directives
+
+* Use `#pragma mark - <section_name>` to sepparate class code into sections of similar function. In particular, when implementing delegate's methods, name the section after delegates name. For instance, methods of `UITextFieldDelegate` should be located under `#pragma mark - UITextFieldDelegate` section.
+* Use `#ifdef`, `#ifndef` and `#define` to change constants and flow based on what configuration the project is built on, by passing preprocessor macros.
+* Note, try avoiding uses of `#define` for constants. Consider using static and extern variables instead. It helps to have strongly referenced code that is better managed by Xcode. See [this article](http://qualitycoding.org/preprocessor/) for more details.
+
+### For example:
+
+```objc
+
+#pragma mark - My section
+
+- (id)init
+{
+    return nil;
+}
     
+- (id)initWithFoo:(id)bar
+{
+#ifdef DEBUG
+    return 1;
+#endif
+    return nil;
+}
+```
+
+## Comments
+
+Use following comment structures to keep track of issues in code. Xcode's jumpbar will automatically highlight these comments. In addition, using [XToDo](https://github.com/trawor/XToDo) plugin will make it easier to keep track of them.
+
+* Consider using Doxygen-style documentation in your header files. These comments are automatically hooked up by Xcode to produce on-demand documentation similar to system classes. This snippet can be saved to Xcode to quickly generate comments on shortcut:
+
+```
+/**
+ <#description#>
+ @discussion <#discussion#>
+ @param <#parameter#>
+ @returns <#retval#>
+ @exception <#throws#>
+ */
+```
+
+* Use `TODO` to indicate incomplete code.
+* Use `FIXME` to indicate malfunctioning code.
+* Use `!!!` for code that is likely to have a critical issue.
+* Use `???` for unclear code that needs to be discussed.
+
+### For example:
+
+```objc
+//TODO: Implement this
+
+//FIXME: This is buggy
+
+//!!!: This is totally wrong!
+
+//???: Why is it here?
+```
+
+## Imports
+
+* Imports have to be included in headers, where protocol definition is needed.
+* Imports have to be moved out of header files, where possible. If your header file contains a property or a method that requires specific class, define that class with `@class`" instruction and put `#import` into implementation file instead. See [this article](http://qualitycoding.org/file-dependencies/) for more details.
+* Eliminate unused imports in your classes. Remember, the less dependencies a class has, the easier it is to test it.
+* Never use `#include` unless it is C++ code.
+* Consider using `@import` over `#import` in projects that support Objective-C modules. See [this article](https://stoneofarc.wordpress.com/2013/06/25/introduction-to-objective-c-modules/) for details.
+* When importing system frameworks or Cocoapods dependencies, use angled brackes and put a framework name as a prefix:
+```objc
+#import <UIKit/UIKit.h>
+#import <AFNetowkring/AFNetowkring.h>
+```
+
+### For example:
+
+**MyClass.h:**
+```objc
+#import "MyOtherClass.h"
+
+@class MyYetAnotherClass;
+@interface MyClass <MyOtherClassDelegate>
+
+@property (nonatomic, strong) MyYetAnotherClass *myProperty;
+
+@end
+```
+
+**MyClass.m:**
+```objc
+#import "MyClass.h"
+#import "MyYetAnotherClass.h"
+
+@implementation MyClass
+
+@end
+```
+    
+## Declarations
+
+* Don’t use line breaks in method declarations.
+* Method declarations should begin with (`-`/`+`) symbol followed by a space and the return type. Properties should only have a space separating them from each other and a the `*` symbol from the property type (where applicable):
+```objc
+- (void)foo:(id)bar something:(NSObject *)something;
+```
+* Always declare memory-management semantics even on `readonly` properties.
+* Declare properties `readonly` if they are only set once in `-init`.
+* Don't use `@synthesize` unless the compiler requires it. Note that optional properties in protocols must be explicitly synthesized in order to exist.
+* Instance variables should be prefixed with an underscore (just like when implicitly synthesized).
+* Don't put a space between an object type and the protocol it conforms to.
+```objc
+@property (attributes) id<Protocol> object;
+@property (nonatomic, strong) NSObject<Protocol> *object;
+```
+* Constructors should generally return `instancetype` rather than `id`.
+* Singleton methods must return `instancetype`.
+* Consider using `NS_DESIGNATED_INITIALIZER` for `-init` methods that must be used to create an instance:
+```objc
+- (instancetype)initWithName:(NSString *)name NS_DESIGNATED_INITIALIZER;
+```
+* Method declarations that accept NSError pointers must embed `__autoreleasing` attribute. In addition, such methods must return `BOOL`, according to conventions:
+```objc
+- (BOOL)parseResponse:(id)response error:(NSError *__autoreleasing *)error;
+```
+* Properties that are used solely inside a class must be defined in class extension inside the implementation file and not in the header file.
+* Instance variables must be defined in class extension inside the implementation file and not in the header file.
+ 
+##IBOutlets
+
+* Always place IBOutlets inside implementation file.
+* If you want to expose IBOutlet property to outside world, consider creating a shadow readonly property in the header file, while still keeping IBOutlet inside the implementation file.
+
+###For example:
+####Class.h
+```objc
+@interface Class
+    
+@property (nonatomic, readonly) UILabel *myLabel;
+    
+@end
+```
+
+####Class.m
+```objc
+#import "Class.h"
+    
+@interface Class
+
+@property (nonatomic, strong) IBOutlet UILabel *myLabel;
+
+@end
+    
+@implementation Class
+
+@end
+```
+
 ##Categories
 
-* Categories should be named for the sort of functionality they provide.
+* Categories should be named for the sort of functionality they provide. 
+* Category filenames should be constructed as ClassName+CategoryName (with plus being an actual part of the filename).
 * Expossing private methods for subclasses or unit testing should be done by creating a class extension named `Class_Private.h`.
 * Massive view controllers or huge manager singletons can have their code dispersed and categorized over several files with categories. In these cases we leave the category method declaration calls in the main class header, but we create different files for category method impementations.
+* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project to avoid runtime collisions with hidden methods. For instance:
+```objc
+@interface UIImage (MyCategory)
+
+- (UIImage *)db_resizeImage;
+
+@end
+```
+
 
 ###For example:
 ####Class.h
@@ -265,22 +390,11 @@ NSDictionary *keyedStuff = @{
 @end
 ```
 
-##Class Headers
 
-Inspiration for this came from using the mature 3rd party library [PSPDFKit](http://pspdfkit.com) and reading the [Structuring Modern Objective-C](http://ashfurrow.com/blog/structuring-modern-objective-c) article.
+##Tests
 
-* Don't #import in Header Files Unnecessarily. Here are the [Benefits](http://qualitycoding.org/file-dependencies/)
-
-####Class.h
-```objc
-class MyOtherClass;
-
-@interface MyClass : NSObject
-
-@property (nonatomic, strong) MyOtherClass property;
-
-@end
-```
+* Name test class names after the class that is being tested. For example, `MyClass_tests.m`.
+* For each tests case, put underscore in the method's name after word test and elsewhere if it makes it easier to read. For instance: `- (void)test_operationSuceeds` or `- (void)test_operationSucceeds_withDelay`.
 
 ##ReactiveCocoa
 
