@@ -27,6 +27,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Declarations](#declarations)
 * [IBOutlets](#iboutlets)
 * [Categories](#categories)
+* [Protocols](#protocols)
 * [Tests](#tests)
 * [ReactiveCocoa](#reactivecocoa)
 * [Objective-clean](#objective-clean)
@@ -204,9 +205,7 @@ NSDictionary *keyedStuff = @{
 
 ## Comments
 
-Use following comment structures to keep track of issues in code. Xcode's jumpbar will automatically highlight these comments. In addition, using [XToDo](https://github.com/trawor/XToDo) plugin will make it easier to keep track of them.
-
-* Consider using Doxygen-style documentation in your header files. These comments are automatically hooked up by Xcode to produce on-demand documentation similar to system classes. This snippet can be saved to Xcode to quickly generate comments on shortcut:
+Consider using Doxygen-style documentation in your header files. These comments are automatically hooked up by Xcode to produce on-demand documentation similar to system classes. This snippet can be saved to Xcode to quickly generate comments on shortcut:
 
 ```
 /**
@@ -217,6 +216,8 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
  @exception <#throws#>
  */
 ```
+
+Use following comment structures to keep track of issues in code. Xcode's jumpbar will automatically highlight these comments. In addition, using [XToDo](https://github.com/trawor/XToDo) plugin will make it easier to keep track of them.
 
 * Use `TODO` to indicate incomplete code.
 * Use `FIXME` to indicate malfunctioning code.
@@ -237,20 +238,20 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 
 ## Imports
 
-* Imports have to be included in headers, where protocol definition is needed.
-* Imports have to be moved out of header files, where possible. If your header file contains a property or a method that requires specific class, define that class with `@class`" instruction and put `#import` into implementation file instead. See [this article](http://qualitycoding.org/file-dependencies/) for more details.
-* Eliminate unused imports in your classes. Remember, the less dependencies a class has, the easier it is to test it.
-* Never use `#include` unless it is C++ code.
-* Consider using `@import` over `#import` in projects that support Objective-C modules. See [this article](https://stoneofarc.wordpress.com/2013/06/25/introduction-to-objective-c-modules/) for details.
-* When importing system frameworks or Cocoapods dependencies, use angled brackes and put a framework name as a prefix:
+* When importing system frameworks or Cocoapods dependencies, use angle brackes and put a framework name as a prefix:
 ```objc
 #import <UIKit/UIKit.h>
 #import <AFNetowkring/AFNetowkring.h>
 ```
+* Imports have to be included in headers, where protocol definition is needed.
+* Imports have to be moved out of header files, where possible. If your header file contains a property or a method that requires specific class, define that class with `@class` instruction and put `#import` into implementation file instead. See [this article](http://qualitycoding.org/file-dependencies/) for more details.
+* Eliminate unused imports in your classes. Remember, the less dependencies a class has, the easier it is to test it.
+* Never use `#include`, unless it is C++ code.
+* Consider using `@import` over `#import` in projects that support Objective-C modules. See [this article](https://stoneofarc.wordpress.com/2013/06/25/introduction-to-objective-c-modules/) for details.
 
 ### For example:
 
-**MyClass.h:**
+####MyClass.h:
 ```objc
 #import "MyOtherClass.h"
 
@@ -262,7 +263,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 @end
 ```
 
-**MyClass.m:**
+####MyClass.m:
 ```objc
 #import "MyClass.h"
 #import "MyYetAnotherClass.h"
@@ -281,6 +282,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ```
 * Always declare memory-management semantics even on `readonly` properties.
 * Declare properties `readonly` if they are only set once in `-init`.
+* Delegates must be marked as `weak`.
 * Don't use `@synthesize` unless the compiler requires it. Note that optional properties in protocols must be explicitly synthesized in order to exist.
 * Instance variables should be prefixed with an underscore (just like when implicitly synthesized).
 * Don't put a space between an object type and the protocol it conforms to.
@@ -320,7 +322,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ```objc
 #import "Class.h"
     
-@interface Class
+@interface Class ()
 
 @property (nonatomic, strong) IBOutlet UILabel *myLabel;
 
@@ -334,10 +336,11 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ##Categories
 
 * Categories should be named for the sort of functionality they provide. 
+* Category name and class extension's brackets should be separated from the class name with a whitespace.
 * Category filenames should be constructed as ClassName+CategoryName (with plus being an actual part of the filename).
 * Expossing private methods for subclasses or unit testing should be done by creating a class extension named `Class_Private.h`.
 * Massive view controllers or huge manager singletons can have their code dispersed and categorized over several files with categories. In these cases we leave the category method declaration calls in the main class header, but we create different files for category method impementations.
-* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project to avoid runtime collisions with hidden methods. For instance:
+* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project followed by underscore to avoid runtime collisions with hidden methods. For instance:
 ```objc
 @interface UIImage (MyCategory)
 
@@ -345,7 +348,6 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 
 @end
 ```
-
 
 ###For example:
 ####Class.h
@@ -386,6 +388,38 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 {
     return;
 }
+
+@end
+```
+
+##Protocols
+
+* Do not define protocol methods as optional, unless it is explicitly needed.
+* When calling delegate's optional methods, always check that it is implemented, for instance:
+```objc
+if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
+	[self.delegate optionalMethod];
+}
+```
+* Unless explicitly needed for subclassing, declare protocol support in class extension inside implementation file instead of the header file.
+
+###For example:
+####Class.h:
+```objc
+@interface Class
+
+@end
+```
+
+####Class.m:
+```objc
+#import "Class.h"
+
+@interface Class () <UITextFieldDelegate>
+
+@end
+
+@implementation Class
 
 @end
 ```
