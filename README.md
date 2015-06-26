@@ -429,7 +429,7 @@ if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
 ##Tests
 
 * Name test class names after the class that is being tested. For example, `MyClass_tests.m`.
-* For each tests case, put underscore in the method's name after word test and elsewhere if it makes it easier to read. For instance: `- (void)test_operationSuceeds` or `- (void)test_operationSucceeds_withDelay`.
+* For each tests case, put underscore in the method's name after word test and elsewhere if it makes it easier to read. For instance: `- (void)test_operationSucceeds` or `- (void)test_operationSucceeds_withDelay`.
 * Avoid constructing bulky test methods. Instead separate the large code block into smaller methods and name them appropriately. If they have common setup routine, consider writing a helper method or using `- setUp`.
 
 ##ReactiveCocoa
