@@ -21,7 +21,7 @@ Motivated by the coding patterns we adopted over the years and inspired by other
 * [Blocks](#blocks)
 * [Literals](#literals)
 * [Exceptions and Error Handling](#exceptions-and-error-handling)
-* [Preprocessor Directives](#proprocessor-directives)
+* [Preprocessor Directives](#preprocessor-directives)
 * [Comments](#comments)
 * [Imports](#imports)
 * [Declarations](#declarations)
