@@ -79,10 +79,10 @@ To:
 int a;
 if (stuff == thing) {
     if (test) {
-       a = foo;
+        a = foo;
     } 
     else {
-       a = barbar;
+        a = barbar;
     }
 } 
 else {
@@ -116,7 +116,7 @@ for (int i = 0; i < 10; i++) {
 ### For example:
 ```objc
 if (somethingIsBad) return;
-    
+
 if (something == nil) {
     // do stuff
 } 
@@ -155,13 +155,13 @@ id (^blockName2)(id) = ^(id args) {
 ```objc
 NSArray *stuff = @[@1, @2, @3];
 NSDictionary *keyedStuff = @{@"myKey": @YES};
-    
+
 NSArray *stuff = @[
     @"Got some long string objects in here.",
     [AndSomeModelObjects too],
     @"More strings."
 ];
-    
+
 NSDictionary *keyedStuff = @{
     @"this.key": @"corresponds to this value",
     @"otherKey": @"remoteData.payload",
@@ -185,9 +185,9 @@ NSDictionary *keyedStuff = @{
 ```objc
 
 NS_ENUM (NSUInteger, DBPaymentMethod) {
-	kPaymentUnknown,
-	kPaymentVisa,
-	kPaymentMasterCard
+    kPaymentUnknown,
+    kPaymentVisa,
+    kPaymentMasterCard
 };
 DBPaymentMethod paymentMethodFromString(NSString *str);
 NSString *stringFromPaymentMethod(DBPaymentMethod method);
@@ -198,19 +198,19 @@ NSString *stringFromPaymentMethod(DBPaymentMethod method);
 
 DBPaymentMethod paymentMethodFromString(NSString *str)
 {
-	if ([str isEqualToString:@"Visa"]) return kPaymentVisa;
-	if ([str isEqualToString:@"MasterCard"]) return kPaymentMasterCard;
-	return kPaymentUnknown;
+    if ([str isEqualToString:@"Visa"]) return kPaymentVisa;
+    if ([str isEqualToString:@"MasterCard"]) return kPaymentMasterCard;
+    return kPaymentUnknown;
 }
 
 NSString *stringFromPaymentMethod(DBPaymentMethod method)
 {
-	switch (method) {
-		case kPaymentVisa: return @"Visa";
-		case kPaymentMasterCard: return @"MasterCard";
-		default: return nil;
-	}
-	return nil;
+    switch (method) {
+        case kPaymentVisa: return @"Visa";
+        case kPaymentMasterCard: return @"MasterCard";
+        default: return nil;
+    }
+    return nil;
 }
 ```
 
@@ -221,7 +221,7 @@ NSString *stringFromPaymentMethod(DBPaymentMethod method)
 * Use `NSParameterAssert` in methods that have required parameters. Do not put expressions that change values inside these macros.
 * To indicate errors, use an `NSError **` argument.
 
-   
+
 ## Preprocessor Directives
 
 * Use `#pragma mark - <section_name>` to sepparate class code into sections of similar function. In particular, when implementing delegate's methods, name the section after delegates name. For instance, methods of `UITextFieldDelegate` should be located under `#pragma mark - UITextFieldDelegate` section.
@@ -240,7 +240,7 @@ NSString *stringFromPaymentMethod(DBPaymentMethod method)
 {
     return nil;
 }
-    
+
 - (id)initWithFoo:(id)bar
 {
 #ifdef DEBUG
@@ -252,17 +252,30 @@ NSString *stringFromPaymentMethod(DBPaymentMethod method)
 
 ## Comments
 
-Consider using Doxygen-style documentation in your header files. These comments are automatically hooked up by Xcode to produce on-demand documentation similar to system classes. This snippet can be saved to Xcode to quickly generate comments on shortcut:
+Consider using HeaderDoc documentation in your header files. These comments are automatically parsed by Xcode to produce on-demand documentation similar to system classes. An example block (notice the extra asterisk at the start):
 
 ```
 /**
- <#description#>
- @discussion <#discussion#>
- @param <#parameter#>
- @returns <#retval#>
- @exception <#throws#>
- */
+@abstract <#short description#>
+@discussion <#long multiline description#>
+@param <#name#> <#purpose#>
+@return <#description of returned value#>
+@throws <#thrown exception#>
+@code <#clarifying code snippet#>
+*/
+- (void)removeComments:(NSUinteger)count
 ```
+
+A separate @param tag is required for every parameter. If nothing is supplied the parent description is shown in the ⌥click. This snippet can be [saved](http://jademind.com/blog/posts/create-your-own-xcode-code-snippets/) to Xcode to quickly generate comments on shortcut:
+
+```
+/**
+@abstract <#short description#>
+@discussion <#long multiline description#>
+*/
+```
+
+You can read more about HeaderDoc [here](https://developer.apple.com/library/mac/documentation/DeveloperTools/Conceptual/HeaderDoc/intro/intro.html).
 
 Use following comment structures to keep track of issues in code. Xcode's jumpbar will automatically highlight these comments. In addition, using [XToDo](https://github.com/trawor/XToDo) plugin will make it easier to keep track of them.
 
@@ -319,7 +332,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 
 @end
 ```
-    
+
 ## Declarations
 
 * Class names must be prefixed with 2 or 3 character abbreviation of the project.
@@ -350,7 +363,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ```
 * Properties that are used solely inside a class must be defined in class extension inside the implementation file and not in the header file.
 * Instance variables must be defined in class extension inside the implementation file and not in the header file.
- 
+
 ##IBOutlets
 
 * Always place IBOutlets inside implementation file.
@@ -360,22 +373,22 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ####DBClass.h
 ```objc
 @interface DBClass
-    
+
 @property (nonatomic, readonly) UILabel *myLabel;
-    
+
 @end
 ```
 
 ####DBClass.m
 ```objc
 #import "DBClass.h"
-    
+
 @interface DBClass ()
 
 @property (nonatomic, strong) IBOutlet UILabel *myLabel;
 
 @end
-    
+
 @implementation DBClass
 
 @end
@@ -401,32 +414,32 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 ####DBClass.h
 ```objc
 @interface DBClass
-    
+
 - (id)init;
-    
+
 @end
-    
+
 @interface DBClass (Foo)
-    
+
 - (void)bar;
-    
+
 @end
 ```
 
 ####DBClass.m
 ```objc
 #import "DBClass.h"
-    
+
 @implementation DBClass
-    
+
 - (id)init
 {
     return nil;
 }
-    
+
 @end
 ```
-    
+
 ####DBClass+Foo.m
 ```objc
 #import "DBClass.h"
@@ -446,7 +459,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 * When calling delegate's optional methods, always check that it is implemented, for instance:
 ```objc
 if ([self.delegate respondsToSelector:@selector(optionalMethod)]) {
-	[self.delegate optionalMethod];
+    [self.delegate optionalMethod];
 }
 ```
 * Unless explicitly needed for subclassing, declare protocol support in class extension inside implementation file instead of the header file.
