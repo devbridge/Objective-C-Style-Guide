@@ -400,7 +400,7 @@ Use following comment structures to keep track of issues in code. Xcode's jumpba
 * Category name and class extension's brackets should be separated from the class name with a whitespace.
 * Category filenames should be constructed as ClassName+CategoryName (with plus being an actual part of the filename).
 * Expossing private methods for subclasses or unit testing should be done by creating a class extension named `Class_Private.h`.
-* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abreviation of the project followed by underscore to avoid runtime collisions with hidden methods. Also, category names with 2 or 3 character abbreviation of your project. For instance:
+* Categories for classes from system frameworks or 3rd-party dependencies must be prefixed with the abbreviation of the project followed by underscore to avoid runtime collisions with hidden methods. Also, category names with 2 or 3 character abbreviation of your project. For instance:
 ```objc
 @interface UIImage (DBResize)
 
